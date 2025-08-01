@@ -1,0 +1,121 @@
+import streamlit as st
+import streamlit.components.v1 as components
+
+# Streamlit 설정
+st.set_page_config(layout="wide", page_title="ひらがな 학습 게임")
+st.title("🎮 ひらがな 학습 게임 (서브 앱 형태)")
+
+# HTML 코드 (한 페이지에 통합)
+html_code = """
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>ひらがな 게임</title>
+  <style>
+    body { font-family: 'Arial', sans-serif; text-align: center; background-color: #f2f8ff; padding: 40px; }
+    h1 { color: #333; }
+    .card {
+      font-size: 100px;
+      border: 2px solid #333;
+      display: inline-block;
+      padding: 30px;
+      border-radius: 20px;
+      background-color: #fff;
+      margin-bottom: 20px;
+    }
+    input {
+      padding: 10px;
+      font-size: 18px;
+      width: 200px;
+    }
+    button {
+      padding: 10px 20px;
+      margin-top: 10px;
+      font-size: 16px;
+    }
+    .result {
+      margin-top: 20px;
+      font-size: 20px;
+      font-weight: bold;
+    }
+    .score {
+      margin-top: 20px;
+      font-size: 18px;
+      color: #0055aa;
+    }
+  </style>
+</head>
+<body>
+
+<h1>ひらがな 학습 게임 🎮</h1>
+<p>히라가나를 보고, 로마자로 발음을 입력하세요!</p>
+
+<div class="card" id="kanaCard">あ</div>
+
+<input type="text" id="userInput" placeholder="예: a">
+<br>
+<button onclick="checkAnswer()">정답 확인</button>
+
+<div class="result" id="resultBox"></div>
+<div class="score" id="scoreBox">점수: 0점 | 레벨: 1</div>
+
+<script>
+  const kanaList = [
+    { kana: "あ", romaji: "a" }, { kana: "い", romaji: "i" }, { kana: "う", romaji: "u" },
+    { kana: "え", romaji: "e" }, { kana: "お", romaji: "o" }, { kana: "か", romaji: "ka" },
+    { kana: "き", romaji: "ki" }, { kana: "く", romaji: "ku" }, { kana: "け", romaji: "ke" },
+    { kana: "こ", romaji: "ko" }, { kana: "さ", romaji: "sa" }, { kana: "し", romaji: "si" },
+    { kana: "す", romaji: "su" }, { kana: "せ", romaji: "se" }, { kana: "そ", romaji: "so" },
+    { kana: "た", romaji: "ta" }, { kana: "ち", romaji: "ti" }, { kana: "つ", romaji: "tu" },
+    { kana: "て", romaji: "te" }, { kana: "と", romaji: "to" }, { kana: "な", romaji: "na" },
+    { kana: "に", romaji: "ni" }, { kana: "ぬ", romaji: "nu" }, { kana: "ね", romaji: "ne" },
+    { kana: "の", romaji: "no" }, { kana: "は", romaji: "ha" }, { kana: "ひ", romaji: "hi" },
+    { kana: "ふ", romaji: "hu" }, { kana: "へ", romaji: "he" }, { kana: "ほ", romaji: "ho" },
+    { kana: "ま", romaji: "ma" }, { kana: "み", romaji: "mi" }, { kana: "む", romaji: "mu" },
+    { kana: "め", romaji: "me" }, { kana: "も", romaji: "mo" }, { kana: "や", romaji: "ya" },
+    { kana: "ゆ", romaji: "yu" }, { kana: "よ", romaji: "yo" }, { kana: "ら", romaji: "ra" },
+    { kana: "り", romaji: "ri" }, { kana: "る", romaji: "ru" }, { kana: "れ", romaji: "re" },
+    { kana: "ろ", romaji: "ro" }, { kana: "わ", romaji: "wa" }, { kana: "を", romaji: "wo" },
+    { kana: "ん", romaji: "nn" }
+  ];
+
+  let score = 0;
+  let level = 1;
+  let current;
+
+  function getRandomKana() {
+    const index = Math.floor(Math.random() * kanaList.length);
+    current = kanaList[index];
+    document.getElementById('kanaCard').textContent = current.kana;
+    document.getElementById('userInput').value = '';
+    document.getElementById('resultBox').textContent = '';
+  }
+
+  function checkAnswer() {
+    const input = document.getElementById('userInput').value.trim().toLowerCase();
+    const resultBox = document.getElementById('resultBox');
+    if (input === current.romaji) {
+      score += 10;
+      resultBox.textContent = "✅ 정답입니다! +10점!";
+      resultBox.style.color = "green";
+    } else {
+      score -= 5;
+      resultBox.textContent = `❌ 오답입니다. 정답은 ${current.romaji}`;
+      resultBox.style.color = "red";
+    }
+    level = Math.floor(score / 50) + 1;
+    document.getElementById('scoreBox').textContent = `점수: ${score}점 | 레벨: ${level}`;
+    setTimeout(getRandomKana, 1000);
+  }
+
+  // 초기 실행
+  getRandomKana();
+</script>
+
+</body>
+</html>
+"""
+
+# Streamlit HTML 렌더링
+components.html(html_code, height=800)

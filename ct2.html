@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>띠 나누기 CT 문제</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      background-color: #f9f9f9;
+      padding: 30px;
+      text-align: center;
+    }
+    h1 { color: #333; }
+    .image-section {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 30px;
+      margin: 30px 0;
+    }
+    .image-box {
+      border: 2px solid #ccc;
+      padding: 10px;
+      background-color: #fff;
+      border-radius: 10px;
+    }
+    .image-box img {
+      max-width: 300px;
+      height: auto;
+    }
+    input[type="number"] {
+      padding: 8px;
+      font-size: 16px;
+      width: 100px;
+      text-align: center;
+      margin-top: 10px;
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      margin-top: 10px;
+      cursor: pointer;
+    }
+    .result {
+      font-size: 20px;
+      margin-top: 20px;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>🐶 띠 나누기 - CT 기반 사고 문제</h1>
+  <p>
+    강아지가 작은 띠를 들고 있어요.<br>
+    아래 긴 띠를, 강아지가 들고 있는 작은 띠의 크기만큼 잘라 나누고 싶어 해요.<br><br>
+    <strong>질문:</strong> 강아지는 이 띠를 최대 몇 개의 작은 띠로 나눌 수 있을까요?
+  </p>
+
+  <div class="image-section">
+    <div class="image-box">
+      <h3>① 강아지가 들고 있는 작은 띠</h3>
+      <img src="./images/dog1.png" alt="작은 띠">
+    </div>
+    <div class="image-box">
+      <h3>② 전체 긴 띠</h3>
+      <img src="./images/dog2.png" alt="긴 띠">
+    </div>
+  </div>
+
+  <p><strong>정답을 숫자로 입력해 보세요!</strong></p>
+  <input type="number" id="userAnswer" placeholder="예: 4">
+  <br>
+  <button onclick="checkAnswer()">정답 확인</button>
+
+  <div class="result" id="resultBox"></div>
+
+  <script>
+    function checkAnswer() {
+      const correctAnswer = 4; // 전체 띠를 작은 띠 크기로 나눈 최대 개수
+      const userInput = parseInt(document.getElementById("userAnswer").value);
+      const resultBox = document.getElementById("resultBox");
+
+      if (isNaN(userInput)) {
+        resultBox.textContent = "❗ 숫자를 입력해 주세요.";
+        resultBox.style.color = "orange";
+        return;
+      }
+
+      if (userInput === correctAnswer) {
+        resultBox.textContent = "✅ 정답입니다! 아주 잘했어요!";
+        resultBox.style.color = "green";
+      } else {
+        resultBox.textContent = "❌ 아쉬워요! 다시 한번 생각해 보세요.";
+        resultBox.style.color = "red";
+      }
+    }
+  </script>
+
+</body>
+</html>
+

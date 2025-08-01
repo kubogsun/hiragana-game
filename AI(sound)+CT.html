@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>ひらがな 발음 게임 🎤</title>
+  <style>
+    body { font-family: 'Arial', sans-serif; text-align: center; background-color: #e8f4ff; padding: 40px; }
+    .card {
+      font-size: 100px;
+      border: 2px solid #333;
+      display: inline-block;
+      padding: 30px;
+      border-radius: 20px;
+      background-color: #fff;
+      margin-bottom: 20px;
+    }
+    .score, .result {
+      font-size: 20px;
+      margin-top: 20px;
+      font-weight: bold;
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 18px;
+      margin: 10px;
+    }
+    .level {
+      font-size: 18px;
+      color: #0055aa;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+
+<h1>🎤 ひらがな 발음 게임</h1>
+<p>제시된 히라가나를 마이크에 대고 <strong>로마자 발음</strong>으로 말해 보세요!</p>
+
+<div class="card" id="kanaCard">あ</div>
+<br>
+<button onclick="startRecognition()">🎙️ 발음 시작</button>
+
+<div class="result" id="resultBox">🎧 인식 대기 중...</div>
+<div class="score" id="scoreBox">점수: 0점</div>
+<div class="level" id="levelBox">레벨: 1</div>
+
+<script>
+  const kanaList = [
+    { kana: "あ", romaji: "a" }, { kana: "い", romaji: "i" }, { kana: "う", romaji: "u" },
+    { kana: "え", romaji: "e" }, { kana: "お", romaji: "o" }, { kana: "か", romaji: "ka" },
+    { kana: "き", romaji: "ki" }, { kana: "く", romaji: "ku" }, { kana: "け", romaji: "ke" },
+    { kana: "こ", romaji: "ko" }, { kana: "さ", romaji: "sa" }, { kana: "し", romaji: "shi" },
+    { kana: "す", romaji: "su" }, { kana: "せ", romaji: "se" }, { kana: "そ", romaji: "so" }
+  ];
+
+  let score = 0;
+  let level = 1;
+  let currentKana = {};
+
+  function getRandomKana() {
+    const index = Math.floor(Math.random() * kanaList.length);
+    currentKana = kanaList[index];
+    document.getElementById('kanaCard').textContent = currentKana.kana;
+    document.getElementById('resultBox').textContent = "🎧 인식 대기 중...";
+  }
+
+  function startRecognition() {
+    if (!('webkitSpeechRecognition' in window)) {
+      alert("이 브라우저는 음성 인식을 지원하지 않습니다. 크롬을 사용해 주세요.");
+      return;
+    }
+
+    const recognition = new webkitSpeechRecognition();
+    recognition.lang = 'en-US'; // 로마자 인식용 영어 설정
+    recognition.interimResults = false;
+    recognition.maxAlternatives = 1;
+
+    recognition.onstart = () => {
+      document.getElementById('resultBox').textContent = "🎙️ 듣는 중...";
+    };
+
+    recognition.onresult = (event) => {
+      const spoken = event.results[0][0].transcript.trim().toLowerCase();
+      const correct = currentKana.romaji;
+
+      if (spoken === correct) {
+        score += 10;
+        document.getElementById('resultBox').textContent = `✅ 정답! "${spoken}" (+10점)`;
+      } else {
+        score -= 5;
+        document.getElementById('resultBox').textContent = `❌ 오답. "${spoken}" (정답: ${correct}) (-5점)`;
+      }
+
+      level = Math.floor(score / 50) + 1;
+      document.getElementById('scoreBox').textContent = `점수: ${score}점`;
+      document.getElementById('levelBox').textContent = `레벨: ${level}`;
+      setTimeout(getRandomKana, 1500);
+    };
+
+    recognition.onerror = (event) => {
+      document.getElementById('resultBox').textContent = "⚠️ 오류 발생: " + event.error;
+    };
+
+    recognition.start();
+  }
+
+  // 시작 시 첫 문제 로드
+  getRandomKana();
+</script>
+
+</body>
+</html>
